@@ -1,13 +1,12 @@
-import { Layout } from "@/shared/Layout/ui/Layout"
+import { GamePage } from "@/pages/Game";
+import { Layout } from "@/shared/components/Layout";
 
 function App() {
-  return (
-    <Layout>
-      <div>
-        Hello World
-      </div>
-    </Layout>
-  )
+    return (
+        <Layout>
+            <GamePage />
+        </Layout>
+    );
 }
 
-export default App
+export default App;
