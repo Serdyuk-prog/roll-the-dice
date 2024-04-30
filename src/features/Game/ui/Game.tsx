@@ -1,10 +1,13 @@
 import { Die } from "@/widgets/Die";
+import { useRef } from "react";
 import styled from "styled-components";
 
 export const Game = () => {
+    // const [isDisabled, setIsDisabled] = useState(false);
+    const DieRef = useRef();
     return (
         <GameWrapper>
-            <Die />
+            <Die dieRef={DieRef} />
         </GameWrapper>
     );
 };

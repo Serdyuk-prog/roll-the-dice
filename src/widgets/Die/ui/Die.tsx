@@ -1,36 +1,46 @@
 import { useState, useEffect } from "react";
 import "./Die.css";
 
-export const Die = () => {
+interface DieProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    dieRef: any;
+}
+
+export const Die = ({ dieRef }: DieProps) => {
     const faces = 6;
     const maxRollTimes = 10;
+    const minRollTimes = 3;
 
-    const [intrvl, setIntrvl] = useState();
-    const [diceFace, setDiceFace] = useState(1);
+    const [intervalId, setIntervalId] = useState<number | undefined>();
+    const [diceFace, setDiceFace] = useState<number>();
     const [btnDisabled, setBtnDisabled] = useState(false);
-    const [rollTimes, setRollTimes] = useState<number>();
+    const [rollTimes, setRollTimes] = useState<number | undefined>();
     useEffect(() => {
         if (rollTimes === 0) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            clearInterval(intrvl);
+            clearInterval(intervalId!);
             setBtnDisabled(false);
+            console.log(diceFace);
         }
-    });
+    }, [rollTimes, intervalId, diceFace]);
+
+    useEffect(() => {
+        console.log(dieRef);
+    }, [dieRef]);
 
     function rollDice() {
         setBtnDisabled(true);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        clearInterval(intrvl);
-        let counter = Math.floor(Math.random() * maxRollTimes + 1);
+        clearInterval(intervalId!);
+
+        let counter =
+            Math.floor(Math.random() * (maxRollTimes - minRollTimes + 1)) +
+            minRollTimes;
         setRollTimes(counter);
         const interval = setInterval(() => {
             setDiceFace(Math.floor(Math.random() * faces) + 1);
             counter--;
             setRollTimes(counter);
         }, 200);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        setIntrvl(interval);
+        setIntervalId(interval as unknown as number);
     }
 
     const dice = (
@@ -91,7 +101,6 @@ export const Die = () => {
             disabled={btnDisabled}
             onClick={rollDice}
         >
-            {btnDisabled}
             Roll Dice
         </button>
     );
@@ -99,7 +108,9 @@ export const Die = () => {
     return (
         <div className="main-container">
             <h1>Roll the dice with React Hooks</h1>
-            <div className="main-dice-container">{dice}</div>
+            <div className="main-dice-container" ref={dieRef}>
+                {dice}
+            </div>
             <div className="button-container">{rollButton}</div>
         </div>
     );
